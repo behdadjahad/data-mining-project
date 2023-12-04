@@ -1,10 +1,13 @@
 import numpy as np
 import pandas as pd
 from statistics import stdev, mode, median
+import matplotlib.pyplot as plt
+import seaborn as sns
+
 
 dataset_path = "./dataset/adult.csv"
 
-df = pd.read_csv(dataset_path, encoding= 'unicode_escape')
+df = pd.read_csv(dataset_path, encoding= 'unicode_escape', na_values='?')
 
 central_tendency = dict()
 
@@ -70,7 +73,72 @@ central_tendency["fnlwgt"]["standard_deviation"] = stdev(df["fnlwgt"])
 
 
 for k in central_tendency:
+    plt.figure(figsize=(12, 6))
+    sns.histplot(df[k], bins=30, kde=True, color='skyblue')
+    plt.title(f'Distribution of {k}')
+    plt.xlabel(k)
+    plt.ylabel('Frequency')
+    plt.show()
     print(f"{k}:")
     for ct in central_tendency[k]:
         print(f"\t{ct}: {central_tendency[k][ct]}")
+
+
     print()
+
+
+numeric_data = df.select_dtypes(include=['float64', 'int64'])
+correlation_matrix = numeric_data.corr()
+
+plt.figure(figsize=(12, 8))
+sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt=".2f")
+plt.title('Correlation Matrix of Numeric Features in Adult Census Income Dataset')
+plt.show()
+
+
+
+categorical_variable = 'education'
+
+frequency_table = df[categorical_variable].value_counts()
+relative_frequency_table = df[categorical_variable].value_counts(normalize=True)
+
+plt.figure(figsize=(12, 6))
+sns.countplot(x=categorical_variable, data=df, order=frequency_table.index)
+plt.title(f'Frequency of {categorical_variable}')
+plt.xlabel(categorical_variable)
+plt.ylabel('Frequency')
+plt.xticks(rotation=45)
+plt.show()
+
+print(f'Frequency Table for {categorical_variable}:\n{frequency_table}\n')
+print(f'Relative Frequency Table for {categorical_variable}:\n{relative_frequency_table}\n')
+
+
+
+categorical_variable1 = 'education'
+categorical_variable2 = 'occupation'
+
+contingency_table = pd.crosstab(df[categorical_variable1], df[categorical_variable2])
+
+
+observed_chi2 = contingency_table.values
+n = observed_chi2.sum()
+expected_chi2 = np.outer(contingency_table.sum(axis=1), contingency_table.sum(axis=0)) / n
+chi2 = ((observed_chi2 - expected_chi2) ** 2 / expected_chi2).sum()
+phi2 = chi2 / n
+r, k = contingency_table.shape
+phi2corr = max(0, phi2 - ((k - 1) * (r - 1)) / (n - 1))
+rcorr = r - ((r - 1) ** 2) / (n - 1)
+kcorr = k - ((k - 1) ** 2) / (n - 1)
+cramers_v = np.sqrt(phi2corr / min((kcorr - 1), (rcorr - 1)))
+
+
+plt.figure(figsize=(12, 8))
+sns.heatmap(contingency_table, annot=True, cmap='coolwarm', fmt='d')
+plt.title(f'Contingency Table of {categorical_variable1} and {categorical_variable2}')
+plt.xlabel(categorical_variable2)
+plt.ylabel(categorical_variable1)
+plt.show()
+
+
+print(f'Cramér\'s V: {cramers_v:.4f}')
