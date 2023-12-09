@@ -61,16 +61,6 @@ central_tendency["education.num"]["variance"] = df["education.num"].var()
 central_tendency["education.num"]["standard_deviation"] = stdev(df["education.num"])
 
 
-central_tendency["fnlwgt"] = dict()
-central_tendency["fnlwgt"]["mean"] = df["fnlwgt"].mean()
-central_tendency["fnlwgt"]["min"] = df["fnlwgt"].min()
-central_tendency["fnlwgt"]["max"] = df["fnlwgt"].max()
-central_tendency["fnlwgt"]["mode"] = mode(df["fnlwgt"])
-central_tendency["fnlwgt"]["median"] = median(df["fnlwgt"])
-central_tendency["fnlwgt"]["variance"] = df["fnlwgt"].var()
-central_tendency["fnlwgt"]["standard_deviation"] = stdev(df["fnlwgt"])
-
-
 
 for k in central_tendency:
     plt.figure(figsize=(12, 6))
