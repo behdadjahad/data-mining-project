@@ -3,6 +3,8 @@ import pandas as pd
 from statistics import stdev, mode, median
 import matplotlib.pyplot as plt
 import seaborn as sns
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.impute import SimpleImputer
 
 
 dataset_path = "./dataset/adult.csv"
@@ -72,20 +74,21 @@ for k in central_tendency:
     print(f"{k}:")
     for ct in central_tendency[k]:
         print(f"\t{ct}: {central_tendency[k][ct]}")
-
-
     print()
 
 
-numeric_data = df.select_dtypes(include=['float64', 'int64'])
-correlation_matrix = numeric_data.corr()
+quantitative_variables = ['age', 'education.num', 'capital.gain', 'capital.loss', 'hours.per.week']
+
+scaler = MinMaxScaler()
+data_normalized = pd.DataFrame(scaler.fit_transform(df[quantitative_variables]), columns=quantitative_variables)
+
+
+correlation_matrix = data_normalized.corr()
 
 plt.figure(figsize=(12, 8))
 sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt=".2f")
-plt.title('Correlation Matrix of Numeric Features in Adult Census Income Dataset')
+plt.title('Normalized Correlation Matrix of Quantitative Features')
 plt.show()
-
-
 
 categorical_variable = 'education'
 
