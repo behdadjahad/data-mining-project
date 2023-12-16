@@ -82,7 +82,7 @@ quantitative_variables = ['age', 'education.num', 'capital.gain', 'capital.loss'
 scaler = MinMaxScaler()
 data_normalized = pd.DataFrame(scaler.fit_transform(df[quantitative_variables]), columns=quantitative_variables)
 
-
+print(data_normalized)
 correlation_matrix = data_normalized.corr()
 
 plt.figure(figsize=(12, 8))
