@@ -62,6 +62,7 @@ col=['workclass','education']
 for i in col:
     k=pd.crosstab(df['income'],df[i])
     k.plot(kind='bar', stacked=True)
+    plt.set_title(i)
     plt.show()
 
 
