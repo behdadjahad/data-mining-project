@@ -10,7 +10,8 @@ from sklearn.impute import SimpleImputer
 dataset_path = "./dataset/adult.csv"
 
 df = pd.read_csv(dataset_path, encoding= 'unicode_escape', na_values='?')
-
+print(df.head())
+print(df.shape)
 central_tendency = dict()
 
 central_tendency["age"] = dict()
