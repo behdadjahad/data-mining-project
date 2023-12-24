@@ -45,7 +45,7 @@ plt.show()
 grouped_data = df.groupby(['race', 'income'])['income'].count().unstack()
 
 # Create the stacked barplot
-ax = grouped_data.plot(kind='bar', stacked=True, color=['#FF00FF', '#00FF00'])
+ax = grouped_data.plot(kind='bar', stacked=True, color=['#9C9CEE', '#8FB98F'])
 
 # Add labels and title
 ax.set_title('Income by Race')
@@ -62,7 +62,7 @@ col=['workclass','education']
 for i in col:
     k=pd.crosstab(df['income'],df[i])
     k.plot(kind='bar', stacked=True)
-    plt.set_title(i)
+    plt.suptitle(i)
     plt.show()
 
 
