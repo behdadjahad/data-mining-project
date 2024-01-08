@@ -1,4 +1,3 @@
-# Import necessary libraries
 import numpy as np
 import pandas as pd
 from sklearn.cluster import KMeans
@@ -53,39 +52,34 @@ class KMeansClustring:
         return y    
 
 def K_means_Clustering():
-    # Load the dataset
-    # Replace 'your_dataset.csv' with the actual file path or URL of your dataset
-    df = pd.read_csv("./dataset/creditcard.csv")
 
-    # Drop unnecessary columns for clustering
-    X = df.drop(['Class', 'Time', 'Amount'], axis=1)
+    df = pd.read_csv('./dataset/creditcard.csv')
+    Y = df['Class'].values
+    X = df.drop(['Class', 'Time', 'Amount'], axis=1).values
 
-    # Standardize the data
-    scaler = StandardScaler()
-    X_std = scaler.fit_transform(X)
+    kmeans_model = KMeansClustring(k=2)
 
-    # Reduce dimensionality using PCA (optional, for visualization purposes)
-    pca = PCA(n_components=2)
-    X_pca = pca.fit_transform(X_std)
+    Y_Pred = kmeans_model.fit(X)
 
-    # Choose the number of clusters (k)
-    k = 2  # You may adjust this based on the nature of your dataset
+    print("length:", len(Y_Pred), "Y pred:", Y_Pred)
+    print("length:", len(Y), "Y:", Y)
 
-    # Apply k-means clustering
-    kmeans = KMeans(n_clusters=k, random_state=42)
-    df['Cluster'] = kmeans.fit_predict(X_std)
-
-    # Visualize the results (using PCA for 2D visualization)
-    plt.scatter(X_pca[:, 0], X_pca[:, 1], c=df['Cluster'], cmap='viridis', alpha=0.5)
+ 
+    plt.scatter(X[:, 0], X[:, 1], c=Y_Pred, cmap='viridis', alpha=0.5)
+    plt.scatter(kmeans_model.centroids[:, 0], kmeans_model.centroids[:, 1], marker='X', s=200, c='red', label='Centroids')
     plt.title('K-Means Clustering Results')
-    plt.xlabel('Principal Component 1')
-    plt.ylabel('Principal Component 2')
+    plt.xlabel('combination of all attr')
+    plt.ylabel('class')
+    plt.legend()
     plt.show()
 
-    # Assuming df is your DataFrame with 'Cluster' column from k-means
-    silhouette_avg = silhouette_score(X_std, df['Cluster'])
-    print(f"Silhouette Score: {silhouette_avg}")
+    count = 0
+    for i, pred_label in enumerate(Y_Pred):
+        if pred_label == Y[i]:
+            count = count + 1
 
+    accuracy = count / len(Y_Pred)
+    print("Accuracy:", accuracy)
 
 
 
